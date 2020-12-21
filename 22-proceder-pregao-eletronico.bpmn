@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="ProcederPregaoEletronicoProcess" name="Proceder pregão eletrônico" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:sequenceFlow id="Flow_0bk3m9u" sourceRef="AquisicaoPlanejadaStartEvent" targetRef="VerificarEnquadramentoModeloPadraoDeEditalTask" />
+    <bpmn:userTask id="VerificarEnquadramentoModeloPadraoDeEditalTask" name="Verificar enquadramento modelo padrão de edital" camunda:candidateGroups="SA301">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="enquadramentoModeloPadrao" label="Se enquadra em um modelo padrão?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0bk3m9u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ac2ywk</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_02pkmob" default="Flow_0i43ni8">
+      <bpmn:incoming>Flow_1ac2ywk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i43ni8</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0a8ys8y</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1ac2ywk" sourceRef="VerificarEnquadramentoModeloPadraoDeEditalTask" targetRef="Gateway_02pkmob" />
+    <bpmn:sequenceFlow id="Flow_0i43ni8" sourceRef="Gateway_02pkmob" targetRef="ConferirEditalTask" />
+    <bpmn:userTask id="ConferirEditalTask" name="Conferir edital" camunda:candidateGroups="SA302">
+      <bpmn:incoming>Flow_0i43ni8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1x9py16</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1hfgk3p">
+      <bpmn:incoming>Flow_1x9py16</bpmn:incoming>
+      <bpmn:incoming>Flow_1p1567x</bpmn:incoming>
+      <bpmn:outgoing>Flow_0u6hd2n</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1x9py16" sourceRef="ConferirEditalTask" targetRef="Gateway_1hfgk3p" />
+    <bpmn:sequenceFlow id="Flow_0a8ys8y" sourceRef="Gateway_02pkmob" targetRef="ElaborarEAnalisarMinutaDoEditalTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${enquadramentoModeloPadrao==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="ElaborarEAnalisarMinutaDoEditalTask" name="Elaborar e analisar minuta do edital">
+      <bpmn:incoming>Flow_0a8ys8y</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p1567x</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1p1567x" sourceRef="ElaborarEAnalisarMinutaDoEditalTask" targetRef="Gateway_1hfgk3p" />
+    <bpmn:sequenceFlow id="Flow_0u6hd2n" sourceRef="Gateway_1hfgk3p" targetRef="N221EmitirParecerSobreEditalCallActivity" />
+    <bpmn:exclusiveGateway id="Gateway_0quj73h" default="Flow_02vkezc">
+      <bpmn:incoming>Flow_1km432v</bpmn:incoming>
+      <bpmn:outgoing>Flow_02vkezc</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1pvwuui</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1km432v" sourceRef="EncerrarPregaoEletronicoTask" targetRef="Gateway_0quj73h" />
+    <bpmn:sequenceFlow id="Flow_02vkezc" sourceRef="Gateway_0quj73h" targetRef="Gateway_0bip0jl" />
+    <bpmn:sequenceFlow id="Flow_0q6vhnt" sourceRef="Gateway_0bip0jl" targetRef="HomologarPregaoEletronicoTask" />
+    <bpmn:parallelGateway id="Gateway_0bip0jl">
+      <bpmn:incoming>Flow_02vkezc</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q6vhnt</bpmn:outgoing>
+      <bpmn:outgoing>Flow_15pc3zv</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_15pc3zv" sourceRef="Gateway_0bip0jl" targetRef="AutorizarEmpenhoTask" />
+    <bpmn:sequenceFlow id="Flow_1pvwuui" sourceRef="Gateway_0quj73h" targetRef="NotificarFracassoDaLicitacaoTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sucessoPregao==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="AutorizarEmpenhoTask" name="Autorizar empenho">
+      <bpmn:incoming>Flow_15pc3zv</bpmn:incoming>
+      <bpmn:outgoing>Flow_0zvwiuj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="HomologarPregaoEletronicoTask" name="Homologar pregão eletrônico">
+      <bpmn:incoming>Flow_0q6vhnt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wcfe79</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="EncerrarPregaoEletronicoTask" name="Encerrar pregão eletrônico">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="sucessoPregao" label="Pregão bem sucedido?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0sprt6x</bpmn:incoming>
+      <bpmn:incoming>Flow_0md0crv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1km432v</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="NotificarFracassoDaLicitacaoTask" name="Notificar fracasso da licitação">
+      <bpmn:incoming>Flow_1pvwuui</bpmn:incoming>
+      <bpmn:outgoing>Flow_02cdhv8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_02cdhv8" sourceRef="NotificarFracassoDaLicitacaoTask" targetRef="NotificacaoFracassoParaComiteDeLicitacaoEndEvent" />
+    <bpmn:endEvent id="NotificacaoFracassoParaComiteDeLicitacaoEndEvent" name="Notificação fracasso para Comitê de Licitação">
+      <bpmn:incoming>Flow_02cdhv8</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_05tpiz5" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1wcfe79" sourceRef="HomologarPregaoEletronicoTask" targetRef="Gateway_0f9x3ft" />
+    <bpmn:parallelGateway id="Gateway_0f9x3ft">
+      <bpmn:incoming>Flow_1wcfe79</bpmn:incoming>
+      <bpmn:incoming>Flow_0zvwiuj</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qiusn7</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_0zvwiuj" sourceRef="AutorizarEmpenhoTask" targetRef="Gateway_0f9x3ft" />
+    <bpmn:endEvent id="LicitacaoRealizadaEndEvent" name="Licitação realizada">
+      <bpmn:incoming>Flow_1qiusn7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1qiusn7" sourceRef="Gateway_0f9x3ft" targetRef="LicitacaoRealizadaEndEvent" />
+    <bpmn:startEvent id="AquisicaoPlanejadaStartEvent" name="Aquisição planejada">
+      <bpmn:outgoing>Flow_0bk3m9u</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="FaseDePregaoSubProcess" name="Fase de pregão">
+      <bpmn:incoming>Flow_03lb1k7</bpmn:incoming>
+      <bpmn:incoming>Flow_0oyzpd3</bpmn:incoming>
+      <bpmn:outgoing>Flow_09dxqa8</bpmn:outgoing>
+      <bpmn:startEvent id="Event_029gn3v">
+        <bpmn:outgoing>Flow_1v3tcmw</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:userTask id="RealizarPregaoEletronicoTask" name="Realizar pregão eletrônico">
+        <bpmn:incoming>Flow_1qif7sg</bpmn:incoming>
+        <bpmn:outgoing>Flow_1jdj6m6</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:userTask id="PublicarEditalTask" name="Publicar edital">
+        <bpmn:incoming>Flow_1v3tcmw</bpmn:incoming>
+        <bpmn:outgoing>Flow_1ov43m0</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:userTask id="AssinarEditalTask" name="Assinar edital">
+        <bpmn:incoming>Flow_1ov43m0</bpmn:incoming>
+        <bpmn:outgoing>Flow_1qif7sg</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:sequenceFlow id="Flow_1qif7sg" sourceRef="AssinarEditalTask" targetRef="RealizarPregaoEletronicoTask" />
+      <bpmn:sequenceFlow id="Flow_1ov43m0" sourceRef="PublicarEditalTask" targetRef="AssinarEditalTask" />
+      <bpmn:sequenceFlow id="Flow_1v3tcmw" sourceRef="Event_029gn3v" targetRef="PublicarEditalTask" />
+      <bpmn:endEvent id="Event_1q5zi09">
+        <bpmn:incoming>Flow_1jdj6m6</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1jdj6m6" sourceRef="RealizarPregaoEletronicoTask" targetRef="Event_1q5zi09" />
+    </bpmn:subProcess>
+    <bpmn:userTask id="AnalisarImpugnacaoTask" name="Analisar impugnação">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="resultadoAnaliseImpugnacao" label="Resultado da análise da impugnação" type="enum">
+            <camunda:value id="encerrar-pregao" name="Encerrar pregão" />
+            <camunda:value id="reiniciar-pregao" name="Reiniciar pregão" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_119n5sk</bpmn:incoming>
+      <bpmn:outgoing>Flow_0it4bv9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_119n5sk" sourceRef="Event_1jao5xe" targetRef="AnalisarImpugnacaoTask" />
+    <bpmn:sequenceFlow id="Flow_0ctzz5i" sourceRef="N221EmitirParecerSobreEditalCallActivity" targetRef="AcionarComiteDeLicitacaoEvent" />
+    <bpmn:sequenceFlow id="Flow_03lb1k7" sourceRef="AcionarComiteDeLicitacaoEvent" targetRef="FaseDePregaoSubProcess" />
+    <bpmn:subProcess id="ComiteDeLicitacaoSubProcess" name="Comitê de Licitação" triggeredByEvent="true">
+      <bpmn:sequenceFlow id="Flow_0zjrbmn" sourceRef="Event_030nytd" targetRef="TratarImpugnacaoPregaoTask" />
+      <bpmn:endEvent id="Event_153hyjp">
+        <bpmn:incoming>Flow_0g9vita</bpmn:incoming>
+        <bpmn:incoming>Flow_1qdykgx</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1bpa9jj" sourceRef="TratarImpugnacaoPregaoTask" targetRef="Gateway_1422g3k" />
+      <bpmn:userTask id="TratarImpugnacaoPregaoTask" name="Tratar impugnação pregão" camunda:candidateGroups="comite-licitacao">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="impugnacaoPregao" label="Impugnar pregão?" type="boolean" />
+          </camunda:formData>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0zjrbmn</bpmn:incoming>
+        <bpmn:outgoing>Flow_1bpa9jj</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:exclusiveGateway id="Gateway_1422g3k" default="Flow_0g9vita">
+        <bpmn:incoming>Flow_1bpa9jj</bpmn:incoming>
+        <bpmn:outgoing>Flow_0g9vita</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0kc0e8m</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_0g9vita" sourceRef="Gateway_1422g3k" targetRef="Event_153hyjp" />
+      <bpmn:sequenceFlow id="Flow_0kc0e8m" sourceRef="Gateway_1422g3k" targetRef="PregaoImpugnadoEndEvent">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${impugnacaoPregao==true}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:startEvent id="Event_030nytd" isInterrupting="false">
+        <bpmn:extensionElements>
+          <camunda:executionListener event="start">
+            <camunda:script scriptFormat="JavaScript">execution.setVariable("acionarComiteLicitacao", false);</camunda:script>
+          </camunda:executionListener>
+        </bpmn:extensionElements>
+        <bpmn:outgoing>Flow_0zjrbmn</bpmn:outgoing>
+        <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_0zez9nq" camunda:variableName="acionarComiteLicitacao">
+          <bpmn:condition xsi:type="bpmn:tFormalExpression">${acionarComiteLicitacao==true}</bpmn:condition>
+        </bpmn:conditionalEventDefinition>
+      </bpmn:startEvent>
+      <bpmn:endEvent id="PregaoImpugnadoEndEvent" name="Pregão impugnado">
+        <bpmn:incoming>Flow_0kc0e8m</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:boundaryEvent id="Event_1hw9j5k" attachedToRef="TratarImpugnacaoPregaoTask">
+        <bpmn:outgoing>Flow_1qdykgx</bpmn:outgoing>
+        <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_0i5tqqt" camunda:variableName="acionarComiteLicitacao">
+          <bpmn:condition xsi:type="bpmn:tFormalExpression">${acionarComiteLicitacao==false}</bpmn:condition>
+        </bpmn:conditionalEventDefinition>
+      </bpmn:boundaryEvent>
+      <bpmn:sequenceFlow id="Flow_1qdykgx" sourceRef="Event_1hw9j5k" targetRef="Event_153hyjp" />
+    </bpmn:subProcess>
+    <bpmn:boundaryEvent id="Event_1jao5xe" attachedToRef="FaseDePregaoSubProcess">
+      <bpmn:outgoing>Flow_119n5sk</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="ConditionalEventDefinition_1pjyadq" camunda:variableName="impugnacaoPregao">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">${impugnacaoPregao==true}</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:intermediateThrowEvent id="DesacionarComiteDeLicitacaoEvent" name="Desacionar Comitê de Licitação">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("acionarComiteLicitacao", false);</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09dxqa8</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sprt6x</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_09dxqa8" sourceRef="FaseDePregaoSubProcess" targetRef="DesacionarComiteDeLicitacaoEvent" />
+    <bpmn:sequenceFlow id="Flow_0sprt6x" sourceRef="DesacionarComiteDeLicitacaoEvent" targetRef="EncerrarPregaoEletronicoTask" />
+    <bpmn:intermediateThrowEvent id="AcionarComiteDeLicitacaoEvent" name="Acionar Comitê de Licitação">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("acionarComiteLicitacao", true);</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ctzz5i</bpmn:incoming>
+      <bpmn:outgoing>Flow_03lb1k7</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="Gateway_07casbc">
+      <bpmn:incoming>Flow_0it4bv9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0oyzpd3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0md0crv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0it4bv9" sourceRef="AnalisarImpugnacaoTask" targetRef="Gateway_07casbc" />
+    <bpmn:sequenceFlow id="Flow_0oyzpd3" sourceRef="Gateway_07casbc" targetRef="FaseDePregaoSubProcess">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${resultadoAnaliseImpugnacao=="reiniciar-pregao"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0md0crv" sourceRef="Gateway_07casbc" targetRef="EncerrarPregaoEletronicoTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${resultadoAnaliseImpugnacao=="encerrar-pregao"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="N221EmitirParecerSobreEditalCallActivity" name="22.1 Emitir parecer sobre edital">
+      <bpmn:incoming>Flow_0u6hd2n</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ctzz5i</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProcederPregaoEletronicoProcess">
+      <bpmndi:BPMNEdge id="Flow_0md0crv_di" bpmnElement="Flow_0md0crv">
+        <di:waypoint x="835" y="730" />
+        <di:waypoint x="1041" y="730" />
+        <di:waypoint x="1041" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0oyzpd3_di" bpmnElement="Flow_0oyzpd3">
+        <di:waypoint x="810" y="705" />
+        <di:waypoint x="810" y="630" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0it4bv9_di" bpmnElement="Flow_0it4bv9">
+        <di:waypoint x="411" y="730" />
+        <di:waypoint x="785" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sprt6x_di" bpmnElement="Flow_0sprt6x">
+        <di:waypoint x="939" y="530" />
+        <di:waypoint x="991" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09dxqa8_di" bpmnElement="Flow_09dxqa8">
+        <di:waypoint x="851" y="530" />
+        <di:waypoint x="903" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03lb1k7_di" bpmnElement="Flow_03lb1k7">
+        <di:waypoint x="810" y="338" />
+        <di:waypoint x="810" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ctzz5i_di" bpmnElement="Flow_0ctzz5i">
+        <di:waypoint x="810" y="228" />
+        <di:waypoint x="810" y="302" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_119n5sk_di" bpmnElement="Flow_119n5sk">
+        <di:waypoint x="241" y="648" />
+        <di:waypoint x="241" y="730" />
+        <di:waypoint x="311" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qiusn7_di" bpmnElement="Flow_1qiusn7">
+        <di:waypoint x="1556" y="530" />
+        <di:waypoint x="1613" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zvwiuj_di" bpmnElement="Flow_0zvwiuj">
+        <di:waypoint x="1451" y="600" />
+        <di:waypoint x="1531" y="600" />
+        <di:waypoint x="1531" y="555" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wcfe79_di" bpmnElement="Flow_1wcfe79">
+        <di:waypoint x="1451" y="460" />
+        <di:waypoint x="1531" y="460" />
+        <di:waypoint x="1531" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02cdhv8_di" bpmnElement="Flow_02cdhv8">
+        <di:waypoint x="1451" y="730" />
+        <di:waypoint x="1613" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pvwuui_di" bpmnElement="Flow_1pvwuui">
+        <di:waypoint x="1171" y="555" />
+        <di:waypoint x="1171" y="730" />
+        <di:waypoint x="1351" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15pc3zv_di" bpmnElement="Flow_15pc3zv">
+        <di:waypoint x="1271" y="555" />
+        <di:waypoint x="1271" y="600" />
+        <di:waypoint x="1351" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q6vhnt_di" bpmnElement="Flow_0q6vhnt">
+        <di:waypoint x="1271" y="505" />
+        <di:waypoint x="1271" y="460" />
+        <di:waypoint x="1351" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02vkezc_di" bpmnElement="Flow_02vkezc">
+        <di:waypoint x="1196" y="530" />
+        <di:waypoint x="1246" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1km432v_di" bpmnElement="Flow_1km432v">
+        <di:waypoint x="1091" y="530" />
+        <di:waypoint x="1146" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0u6hd2n_di" bpmnElement="Flow_0u6hd2n">
+        <di:waypoint x="705" y="188" />
+        <di:waypoint x="760" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1p1567x_di" bpmnElement="Flow_1p1567x">
+        <di:waypoint x="600" y="300" />
+        <di:waypoint x="680" y="300" />
+        <di:waypoint x="680" y="213" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a8ys8y_di" bpmnElement="Flow_0a8ys8y">
+        <di:waypoint x="420" y="213" />
+        <di:waypoint x="420" y="300" />
+        <di:waypoint x="500" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x9py16_di" bpmnElement="Flow_1x9py16">
+        <di:waypoint x="600" y="188" />
+        <di:waypoint x="655" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i43ni8_di" bpmnElement="Flow_0i43ni8">
+        <di:waypoint x="445" y="188" />
+        <di:waypoint x="500" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ac2ywk_di" bpmnElement="Flow_1ac2ywk">
+        <di:waypoint x="340" y="188" />
+        <di:waypoint x="395" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bk3m9u_di" bpmnElement="Flow_0bk3m9u">
+        <di:waypoint x="186" y="188" />
+        <di:waypoint x="240" y="188" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0bs20wm_di" bpmnElement="VerificarEnquadramentoModeloPadraoDeEditalTask">
+        <dc:Bounds x="240" y="148" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_02pkmob_di" bpmnElement="Gateway_02pkmob" isMarkerVisible="true">
+        <dc:Bounds x="395" y="163" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p8xi2x_di" bpmnElement="ConferirEditalTask">
+        <dc:Bounds x="500" y="148" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1hfgk3p_di" bpmnElement="Gateway_1hfgk3p" isMarkerVisible="true">
+        <dc:Bounds x="655" y="163" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1e87hos_di" bpmnElement="ElaborarEAnalisarMinutaDoEditalTask">
+        <dc:Bounds x="500" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0quj73h_di" bpmnElement="Gateway_0quj73h" isMarkerVisible="true">
+        <dc:Bounds x="1146" y="505" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1frf1ze_di" bpmnElement="Gateway_0bip0jl">
+        <dc:Bounds x="1246" y="505" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jnxqee_di" bpmnElement="AutorizarEmpenhoTask">
+        <dc:Bounds x="1351" y="560" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1psazkn_di" bpmnElement="HomologarPregaoEletronicoTask">
+        <dc:Bounds x="1351" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ner9do_di" bpmnElement="EncerrarPregaoEletronicoTask">
+        <dc:Bounds x="991" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1oopucw_di" bpmnElement="NotificarFracassoDaLicitacaoTask">
+        <dc:Bounds x="1351" y="690" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0a51mwc_di" bpmnElement="NotificacaoFracassoParaComiteDeLicitacaoEndEvent" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="1613" y="712" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1598" y="755" width="67" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ho7zup_di" bpmnElement="Gateway_0f9x3ft">
+        <dc:Bounds x="1506" y="505" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09md3uy_di" bpmnElement="LicitacaoRealizadaEndEvent" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="1613" y="512" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1609" y="555" width="45" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0eeb7rm_di" bpmnElement="AquisicaoPlanejadaStartEvent" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="150" y="170" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="144" y="213" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_18plep1_di" bpmnElement="N221EmitirParecerSobreEditalCallActivity" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="760" y="148" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0q1hqlk_di" bpmnElement="FaseDePregaoSubProcess" isExpanded="true">
+        <dc:Bounds x="151" y="430" width="700" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1jdj6m6_di" bpmnElement="Flow_1jdj6m6">
+        <di:waypoint x="701" y="530" />
+        <di:waypoint x="763" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v3tcmw_di" bpmnElement="Flow_1v3tcmw">
+        <di:waypoint x="227" y="530" />
+        <di:waypoint x="281" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ov43m0_di" bpmnElement="Flow_1ov43m0">
+        <di:waypoint x="381" y="530" />
+        <di:waypoint x="441" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qif7sg_di" bpmnElement="Flow_1qif7sg">
+        <di:waypoint x="541" y="530" />
+        <di:waypoint x="601" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_029gn3v_di" bpmnElement="Event_029gn3v" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="191" y="512" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cr4tdk_di" bpmnElement="RealizarPregaoEletronicoTask">
+        <dc:Bounds x="601" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07u7ffk_di" bpmnElement="PublicarEditalTask">
+        <dc:Bounds x="281" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pxs3bo_di" bpmnElement="AssinarEditalTask">
+        <dc:Bounds x="441" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1q5zi09_di" bpmnElement="Event_1q5zi09" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="763" y="512" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ywx5vt_di" bpmnElement="AnalisarImpugnacaoTask">
+        <dc:Bounds x="311" y="690" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14ae3tu_di" bpmnElement="ComiteDeLicitacaoSubProcess" isExpanded="true" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="960" y="80" width="505" height="310" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1qdykgx_di" bpmnElement="Flow_1qdykgx">
+        <di:waypoint x="1175" y="132" />
+        <di:waypoint x="1175" y="112" />
+        <di:waypoint x="1405" y="112" />
+        <di:waypoint x="1405" y="172" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kc0e8m_di" bpmnElement="Flow_0kc0e8m">
+        <di:waypoint x="1295" y="215" />
+        <di:waypoint x="1295" y="270" />
+        <di:waypoint x="1387" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g9vita_di" bpmnElement="Flow_0g9vita">
+        <di:waypoint x="1320" y="190" />
+        <di:waypoint x="1387" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bpa9jj_di" bpmnElement="Flow_1bpa9jj">
+        <di:waypoint x="1195" y="190" />
+        <di:waypoint x="1270" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zjrbmn_di" bpmnElement="Flow_0zjrbmn">
+        <di:waypoint x="1036" y="190" />
+        <di:waypoint x="1095" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_153hyjp_di" bpmnElement="Event_153hyjp" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="1387" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07dvu72_di" bpmnElement="TratarImpugnacaoPregaoTask">
+        <dc:Bounds x="1095" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1422g3k_di" bpmnElement="Gateway_1422g3k" isMarkerVisible="true">
+        <dc:Bounds x="1270" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0l8b5wc_di" bpmnElement="Event_030nytd" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="1000" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1x011be_di" bpmnElement="PregaoImpugnadoEndEvent" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="1387" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1378" y="295" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0pkr7cx_di" bpmnElement="Event_1hw9j5k" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="1157" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ft4api_di" bpmnElement="DesacionarComiteDeLicitacaoEvent" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="903" y="512" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="893" y="555" width="56" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_145c0tu_di" bpmnElement="AcionarComiteDeLicitacaoEvent" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="792" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="692" y="310" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_07casbc_di" bpmnElement="Gateway_07casbc" isMarkerVisible="true">
+        <dc:Bounds x="785" y="705" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0n27vsu_di" bpmnElement="Event_1jao5xe" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="223" y="612" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="Process_4461ce39-689e-488b-8358-4f8da8a1e8fa" isExecutable="true">
+    <bpmn:startEvent id="LicitacaoPlanejadaStartEvent" name="Licitação planejada">
+      <bpmn:outgoing>Flow_0x7739h</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0x7739h" sourceRef="LicitacaoPlanejadaStartEvent" targetRef="RealizarProjetoBasicoTask" />
+    <bpmn:sequenceFlow id="Flow_15cjjkm" sourceRef="RealizarProjetoBasicoTask" targetRef="RealizarProjetoExecutivoTask" />
+    <bpmn:sequenceFlow id="Flow_0ucsr7h" sourceRef="RealizarProjetoExecutivoTask" targetRef="DefinirOsRecursosOrcamentariosTask" />
+    <bpmn:sequenceFlow id="Flow_0fjx27q" sourceRef="DefinirOsRecursosOrcamentariosTask" targetRef="DefinirEditalDeLicitacaoTask" />
+    <bpmn:sequenceFlow id="Flow_0nu6qg7" sourceRef="DefinirEditalDeLicitacaoTask" targetRef="EscreverMinutaDoEditalDeLicitacaoTask" />
+    <bpmn:sequenceFlow id="Flow_0udlo2a" sourceRef="EscreverMinutaDoEditalDeLicitacaoTask" targetRef="AnalisarMinutaDoEditalTask" />
+    <bpmn:sequenceFlow id="Flow_12qtzw2" sourceRef="AnalisarMinutaDoEditalTask" targetRef="PublicarEditalTask" />
+    <bpmn:sequenceFlow id="Flow_12ujp1r" sourceRef="PublicarEditalTask" targetRef="EstabelecerComissaoDeLicitacaoTask" />
+    <bpmn:sequenceFlow id="Flow_0qsnm9o" sourceRef="EstabelecerComissaoDeLicitacaoTask" targetRef="ReceberPropostasDaLicitacaoTask" />
+    <bpmn:sequenceFlow id="Flow_1x2961z" sourceRef="ReceberPropostasDaLicitacaoTask" targetRef="DefinirTarefasDeMedicaoTask" />
+    <bpmn:sequenceFlow id="Flow_10fq002" sourceRef="DefinirTarefasDeMedicaoTask" targetRef="RevisarTarefasDeMedicaoTask" />
+    <bpmn:sequenceFlow id="Flow_18kg3l2" sourceRef="RevisarTarefasDeMedicaoTask" targetRef="EmitirParecerDasMedicoesTask" />
+    <bpmn:endEvent id="LicitacaoRealizadaEndEvent" name="Licitação realizada">
+      <bpmn:incoming>Flow_1ynnbgv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ynnbgv" sourceRef="EmitirParecerDasMedicoesTask" targetRef="LicitacaoRealizadaEndEvent" />
+    <bpmn:userTask id="RealizarProjetoBasicoTask" name="Realizar projeto básico">
+      <bpmn:incoming>Flow_0x7739h</bpmn:incoming>
+      <bpmn:outgoing>Flow_15cjjkm</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="RealizarProjetoExecutivoTask" name="Realizar projeto executivo">
+      <bpmn:incoming>Flow_15cjjkm</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ucsr7h</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="DefinirOsRecursosOrcamentariosTask" name="Definir os recursos orçamentários">
+      <bpmn:incoming>Flow_0ucsr7h</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fjx27q</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="DefinirEditalDeLicitacaoTask" name="Definir edital de licitação">
+      <bpmn:incoming>Flow_0fjx27q</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nu6qg7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="EscreverMinutaDoEditalDeLicitacaoTask" name="Escrever minuta do edital de licitação">
+      <bpmn:incoming>Flow_0nu6qg7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0udlo2a</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="AnalisarMinutaDoEditalTask" name="Analisar minuta do edital">
+      <bpmn:incoming>Flow_0udlo2a</bpmn:incoming>
+      <bpmn:outgoing>Flow_12qtzw2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="PublicarEditalTask" name="Publicar edital">
+      <bpmn:incoming>Flow_12qtzw2</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ujp1r</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="EstabelecerComissaoDeLicitacaoTask" name="Estabelecer comissão de licitação">
+      <bpmn:incoming>Flow_12ujp1r</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qsnm9o</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="ReceberPropostasDaLicitacaoTask" name="Receber propostas da licitação">
+      <bpmn:incoming>Flow_0qsnm9o</bpmn:incoming>
+      <bpmn:outgoing>Flow_1x2961z</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="DefinirTarefasDeMedicaoTask" name="Definir tarefas de medição">
+      <bpmn:incoming>Flow_1x2961z</bpmn:incoming>
+      <bpmn:outgoing>Flow_10fq002</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="RevisarTarefasDeMedicaoTask" name="Revisar tarefas de medição">
+      <bpmn:incoming>Flow_10fq002</bpmn:incoming>
+      <bpmn:outgoing>Flow_18kg3l2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="EmitirParecerDasMedicoesTask" name="Emitir parecer das medições">
+      <bpmn:incoming>Flow_18kg3l2</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ynnbgv</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_4461ce39-689e-488b-8358-4f8da8a1e8fa">
+      <bpmndi:BPMNEdge id="Flow_1ynnbgv_di" bpmnElement="Flow_1ynnbgv">
+        <di:waypoint x="2100" y="118" />
+        <di:waypoint x="2162" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18kg3l2_di" bpmnElement="Flow_18kg3l2">
+        <di:waypoint x="1940" y="118" />
+        <di:waypoint x="2000" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10fq002_di" bpmnElement="Flow_10fq002">
+        <di:waypoint x="1780" y="118" />
+        <di:waypoint x="1840" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x2961z_di" bpmnElement="Flow_1x2961z">
+        <di:waypoint x="1620" y="118" />
+        <di:waypoint x="1680" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qsnm9o_di" bpmnElement="Flow_0qsnm9o">
+        <di:waypoint x="1460" y="118" />
+        <di:waypoint x="1520" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12ujp1r_di" bpmnElement="Flow_12ujp1r">
+        <di:waypoint x="1300" y="118" />
+        <di:waypoint x="1360" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12qtzw2_di" bpmnElement="Flow_12qtzw2">
+        <di:waypoint x="1140" y="118" />
+        <di:waypoint x="1200" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0udlo2a_di" bpmnElement="Flow_0udlo2a">
+        <di:waypoint x="980" y="118" />
+        <di:waypoint x="1040" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nu6qg7_di" bpmnElement="Flow_0nu6qg7">
+        <di:waypoint x="820" y="118" />
+        <di:waypoint x="880" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fjx27q_di" bpmnElement="Flow_0fjx27q">
+        <di:waypoint x="660" y="118" />
+        <di:waypoint x="720" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ucsr7h_di" bpmnElement="Flow_0ucsr7h">
+        <di:waypoint x="470" y="230" />
+        <di:waypoint x="470" y="118" />
+        <di:waypoint x="560" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15cjjkm_di" bpmnElement="Flow_15cjjkm">
+        <di:waypoint x="340" y="118" />
+        <di:waypoint x="370" y="118" />
+        <di:waypoint x="370" y="270" />
+        <di:waypoint x="420" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x7739h_di" bpmnElement="Flow_0x7739h">
+        <di:waypoint x="186" y="118" />
+        <di:waypoint x="240" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="LicitacaoPlanejadaStartEvent">
+        <dc:Bounds x="150" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="144" y="143" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15kt0ao_di" bpmnElement="LicitacaoRealizadaEndEvent">
+        <dc:Bounds x="2162" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2158" y="143" width="45" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1styqmm_di" bpmnElement="RealizarProjetoBasicoTask">
+        <dc:Bounds x="240" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sehcib_di" bpmnElement="DefinirOsRecursosOrcamentariosTask">
+        <dc:Bounds x="560" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h4tvkm_di" bpmnElement="DefinirEditalDeLicitacaoTask">
+        <dc:Bounds x="720" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0aegt5u_di" bpmnElement="EscreverMinutaDoEditalDeLicitacaoTask">
+        <dc:Bounds x="880" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kgjz93_di" bpmnElement="AnalisarMinutaDoEditalTask">
+        <dc:Bounds x="1040" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08gknjh_di" bpmnElement="PublicarEditalTask">
+        <dc:Bounds x="1200" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_113cdw8_di" bpmnElement="EstabelecerComissaoDeLicitacaoTask">
+        <dc:Bounds x="1360" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nrcqhr_di" bpmnElement="ReceberPropostasDaLicitacaoTask">
+        <dc:Bounds x="1520" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jj88zx_di" bpmnElement="DefinirTarefasDeMedicaoTask">
+        <dc:Bounds x="1680" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ginq29_di" bpmnElement="RevisarTarefasDeMedicaoTask">
+        <dc:Bounds x="1840" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17l81a9_di" bpmnElement="EmitirParecerDasMedicoesTask">
+        <dc:Bounds x="2000" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1chgk8o_di" bpmnElement="RealizarProjetoExecutivoTask">
+        <dc:Bounds x="420" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

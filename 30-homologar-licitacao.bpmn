@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0" camunda:diagramRelationId="3a89e22a-e357-4c7b-8187-4dc80433bc3f">
+  <bpmn:process id="HomologarALicitacaoProcess" name="Homologar a licitação" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0by450i</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="FirmarContratoTask" name="Firmar contrato">
+      <bpmn:incoming>Flow_0by450i</bpmn:incoming>
+      <bpmn:outgoing>Flow_14nkugq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0by450i" sourceRef="StartEvent_1" targetRef="FirmarContratoTask" />
+    <bpmn:task id="AutorizarExecucaoDosServicosTask" name="Autorizar execução dos serviços">
+      <bpmn:incoming>Flow_14nkugq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e85cfe</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_14nkugq" sourceRef="FirmarContratoTask" targetRef="AutorizarExecucaoDosServicosTask" />
+    <bpmn:endEvent id="Event_1dqd8ro">
+      <bpmn:incoming>Flow_0e85cfe</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0e85cfe" sourceRef="AutorizarExecucaoDosServicosTask" targetRef="Event_1dqd8ro" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HomologarALicitacaoProcess">
+      <bpmndi:BPMNEdge id="Flow_0e85cfe_di" bpmnElement="Flow_0e85cfe">
+        <di:waypoint x="500" y="118" />
+        <di:waypoint x="562" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14nkugq_di" bpmnElement="Flow_14nkugq">
+        <di:waypoint x="340" y="118" />
+        <di:waypoint x="400" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0by450i_di" bpmnElement="Flow_0by450i">
+        <di:waypoint x="186" y="118" />
+        <di:waypoint x="240" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="150" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0b46ri3_di" bpmnElement="FirmarContratoTask">
+        <dc:Bounds x="240" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1z0vo38_di" bpmnElement="AutorizarExecucaoDosServicosTask">
+        <dc:Bounds x="400" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1dqd8ro_di" bpmnElement="Event_1dqd8ro">
+        <dc:Bounds x="562" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

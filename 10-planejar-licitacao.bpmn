@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0" camunda:diagramRelationId="26728801-7a57-486d-8478-9d9843cfbcf6">
+  <bpmn:process id="PlanejarALicitacaoProcess" name="Planejar a licitação" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:startEvent id="NecessidadeDeAquisicaoStartEvent" name="Necessidade de aquisição">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="valorPedido" label="Valor do pedido" type="long" />
+          <camunda:formField id="tipoPedido" label="Tipo do pedido" type="enum">
+            <camunda:value id="bens-de-informatica" name="Bens de informática" />
+            <camunda:value id="prestacao-de-servicos" name="Prestação de serviços" />
+            <camunda:value id="bens-duraveis" name="Bens duráveis" />
+            <camunda:value id="obras" name="Obras" />
+            <camunda:value id="obras-acessibilidade" name="Obras de acessibilidade" />
+          </camunda:formField>
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1v6gd9v</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1v6gd9v" sourceRef="NecessidadeDeAquisicaoStartEvent" targetRef="ProgramarAquisicaoTask" />
+    <bpmn:sequenceFlow id="Flow_0trf26k" sourceRef="ProgramarAquisicaoTask" targetRef="DesempenharEstudoDeViabilidadeTask" />
+    <bpmn:sequenceFlow id="Flow_0176a6y" sourceRef="DesempenharEstudoDeViabilidadeTask" targetRef="VerificarViabilidadeTask" />
+    <bpmn:sequenceFlow id="Flow_1nz8jph" sourceRef="ElaborarAnteprojetoTask" targetRef="AtribuirAprovadorTask" />
+    <bpmn:endEvent id="AquisicaoPlanejadaEndEvent" name="Aquisição planejada">
+      <bpmn:incoming>Flow_1d7yetg</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_07of1ll" sourceRef="AtribuirAprovadorTask" targetRef="AutorizarLicitacaoTask" />
+    <bpmn:userTask id="ProgramarAquisicaoTask" name="Programar aquisição">
+      <bpmn:incoming>Flow_1v6gd9v</bpmn:incoming>
+      <bpmn:outgoing>Flow_0trf26k</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0q9swnj" sourceRef="VerificarViabilidadeTask" targetRef="Gateway_1fo3kvt" />
+    <bpmn:userTask id="DesempenharEstudoDeViabilidadeTask" name="Desempenhar estudo de viabilidade">
+      <bpmn:incoming>Flow_0trf26k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0176a6y</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1fo3kvt" default="Flow_0xncmb9">
+      <bpmn:incoming>Flow_0q9swnj</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xncmb9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_17n13jm</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0xncmb9" sourceRef="Gateway_1fo3kvt" targetRef="ElaborarAnteprojetoTask" />
+    <bpmn:sequenceFlow id="Flow_17n13jm" sourceRef="Gateway_1fo3kvt" targetRef="AquisicaoInviavelEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${viabilidadePedido==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="AquisicaoInviavelEndEvent" name="Aquisição inviável">
+      <bpmn:incoming>Flow_17n13jm</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0ibdcsp" errorRef="Error_0wmkjf7" />
+    </bpmn:endEvent>
+    <bpmn:userTask id="ElaborarAnteprojetoTask" name="Elaborar anteprojeto">
+      <bpmn:incoming>Flow_0xncmb9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nz8jph</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:businessRuleTask id="AtribuirAprovadorTask" name="Atribuir aprovador" camunda:resultVariable="resultadoAprovador" camunda:decisionRef="AtribuirAprovadorDecision" camunda:mapDecisionResult="singleResult">
+      <bpmn:incoming>Flow_1nz8jph</bpmn:incoming>
+      <bpmn:outgoing>Flow_07of1ll</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:sequenceFlow id="Flow_1prqs5g" sourceRef="AutorizarLicitacaoTask" targetRef="Gateway_03ngfrt" />
+    <bpmn:userTask id="AutorizarLicitacaoTask" name="Autorizar licitação" camunda:candidateGroups="${resultadoAprovador.tipoAprovador}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="autorizacaoLicitacao" label="Autorização licitação" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_07of1ll</bpmn:incoming>
+      <bpmn:outgoing>Flow_1prqs5g</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="VerificarViabilidadeTask" name="Verificar viabilidade">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="viabilidadePedido" label="Pedido é viável?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0176a6y</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q9swnj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_03ngfrt" default="Flow_1d7yetg">
+      <bpmn:incoming>Flow_1prqs5g</bpmn:incoming>
+      <bpmn:outgoing>Flow_1d7yetg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_140z1mz</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1d7yetg" sourceRef="Gateway_03ngfrt" targetRef="AquisicaoPlanejadaEndEvent" />
+    <bpmn:sequenceFlow id="Flow_140z1mz" sourceRef="Gateway_03ngfrt" targetRef="AquisicaoNaoAutorizadaEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${autorizacaoLicitacao==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="AquisicaoNaoAutorizadaEndEvent" name="Aquisição não autorizada">
+      <bpmn:incoming>Flow_140z1mz</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0ifaky9" errorRef="Error_0f5rgpx" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:error id="Error_0wmkjf7" name="aquisicao-inviavel" errorCode="99" camunda:errorMessage="Aquisição inviável" />
+  <bpmn:error id="Error_0f5rgpx" name="aquisicao-nao-autorizada" errorCode="98" camunda:errorMessage="Aquisição não autorizada" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PlanejarALicitacaoProcess">
+      <bpmndi:BPMNEdge id="Flow_140z1mz_di" bpmnElement="Flow_140z1mz">
+        <di:waypoint x="1340" y="143" />
+        <di:waypoint x="1340" y="230" />
+        <di:waypoint x="1422" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d7yetg_di" bpmnElement="Flow_1d7yetg">
+        <di:waypoint x="1365" y="118" />
+        <di:waypoint x="1422" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1prqs5g_di" bpmnElement="Flow_1prqs5g">
+        <di:waypoint x="1250" y="118" />
+        <di:waypoint x="1315" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17n13jm_di" bpmnElement="Flow_17n13jm">
+        <di:waypoint x="740" y="143" />
+        <di:waypoint x="740" y="230" />
+        <di:waypoint x="832" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xncmb9_di" bpmnElement="Flow_0xncmb9">
+        <di:waypoint x="765" y="118" />
+        <di:waypoint x="830" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q9swnj_di" bpmnElement="Flow_0q9swnj">
+        <di:waypoint x="660" y="118" />
+        <di:waypoint x="715" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07of1ll_di" bpmnElement="Flow_07of1ll">
+        <di:waypoint x="1090" y="118" />
+        <di:waypoint x="1150" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nz8jph_di" bpmnElement="Flow_1nz8jph">
+        <di:waypoint x="930" y="118" />
+        <di:waypoint x="990" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0176a6y_di" bpmnElement="Flow_0176a6y">
+        <di:waypoint x="500" y="118" />
+        <di:waypoint x="560" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0trf26k_di" bpmnElement="Flow_0trf26k">
+        <di:waypoint x="340" y="118" />
+        <di:waypoint x="400" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v6gd9v_di" bpmnElement="Flow_1v6gd9v">
+        <di:waypoint x="186" y="118" />
+        <di:waypoint x="240" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="NecessidadeDeAquisicaoStartEvent" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="150" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="129" y="143" width="79" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1uxmkgs_di" bpmnElement="AquisicaoPlanejadaEndEvent" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="1422" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1416" y="143" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0h9aovj_di" bpmnElement="ProgramarAquisicaoTask">
+        <dc:Bounds x="240" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06i7irl_di" bpmnElement="DesempenharEstudoDeViabilidadeTask">
+        <dc:Bounds x="400" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1fo3kvt_di" bpmnElement="Gateway_1fo3kvt" isMarkerVisible="true">
+        <dc:Bounds x="715" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0o097vd_di" bpmnElement="AquisicaoInviavelEndEvent" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="832" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="807" y="255" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hlj7jd_di" bpmnElement="ElaborarAnteprojetoTask">
+        <dc:Bounds x="830" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00r67r1_di" bpmnElement="AtribuirAprovadorTask">
+        <dc:Bounds x="990" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l49h6h_di" bpmnElement="AutorizarLicitacaoTask">
+        <dc:Bounds x="1150" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xgnx72_di" bpmnElement="VerificarViabilidadeTask">
+        <dc:Bounds x="560" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_03ngfrt_di" bpmnElement="Gateway_03ngfrt" isMarkerVisible="true">
+        <dc:Bounds x="1315" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0favx1i_di" bpmnElement="AquisicaoNaoAutorizadaEndEvent" bioc:stroke="rgb(229, 57, 53)" bioc:fill="rgb(255, 205, 210)">
+        <dc:Bounds x="1422" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1406" y="255" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

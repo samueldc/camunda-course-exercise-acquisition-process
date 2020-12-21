@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="VerificarTipoPregaoDRD" name="Verificar tipo de pregão" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <decision id="VerificarTipoPregaoDecision" name="Verificar tipo de pregão">
+    <decisionTable id="DecisionTable_0ag0rj7">
+      <input id="Input_1" label="Tipo de pedido" camunda:inputVariable="tipoPedido">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>tipoPedido</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Tipo de pregão" name="tipoPregao" typeRef="string" />
+      <rule id="DecisionRule_1qkklqh">
+        <inputEntry id="UnaryTests_0rwlrxf">
+          <text>"obras"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05rtema">
+          <text>"pregao-presencial"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1qrsk3i">
+        <inputEntry id="UnaryTests_14zlhs7">
+          <text>"bens-duraveis", "bens-de-informatica", "prestacao-de-servicos"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0a8nxz9">
+          <text>"pregao-eletronico"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="VerificarTipoPregaoDecision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

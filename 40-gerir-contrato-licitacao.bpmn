@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="GerirOContratoDeLicitacaoProcess" name="Gerir o contrato de licitação" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1mqf3r3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1mqf3r3" sourceRef="StartEvent_1" targetRef="Gateway_19vlzzr" />
+    <bpmn:task id="FiscalizarContratoTask" name="Fiscalizar contrato">
+      <bpmn:incoming>Flow_1p3kegd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q4sjzb</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1p3kegd" sourceRef="Gateway_19vlzzr" targetRef="FiscalizarContratoTask" />
+    <bpmn:sequenceFlow id="Flow_0q4sjzb" sourceRef="FiscalizarContratoTask" targetRef="Gateway_0j17kqw" />
+    <bpmn:endEvent id="Event_0atbnw6">
+      <bpmn:incoming>Flow_12z1ewv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_12z1ewv" sourceRef="Gateway_0j17kqw" targetRef="Event_0atbnw6" />
+    <bpmn:task id="ReceberProdutosEServicosTask" name="Receber produtos e serviços">
+      <bpmn:incoming>Flow_0dyl1aw</bpmn:incoming>
+      <bpmn:outgoing>Flow_16rkdzz</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0dyl1aw" sourceRef="Gateway_19vlzzr" targetRef="ReceberProdutosEServicosTask" />
+    <bpmn:sequenceFlow id="Flow_16rkdzz" sourceRef="ReceberProdutosEServicosTask" targetRef="Gateway_0j17kqw" />
+    <bpmn:parallelGateway id="Gateway_19vlzzr">
+      <bpmn:incoming>Flow_1mqf3r3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p3kegd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0dyl1aw</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:parallelGateway id="Gateway_0j17kqw">
+      <bpmn:incoming>Flow_0q4sjzb</bpmn:incoming>
+      <bpmn:incoming>Flow_16rkdzz</bpmn:incoming>
+      <bpmn:outgoing>Flow_12z1ewv</bpmn:outgoing>
+    </bpmn:parallelGateway>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="GerirOContratoDeLicitacaoProcess">
+      <bpmndi:BPMNEdge id="Flow_16rkdzz_di" bpmnElement="Flow_16rkdzz">
+        <di:waypoint x="460" y="230" />
+        <di:waypoint x="550" y="230" />
+        <di:waypoint x="550" y="143" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dyl1aw_di" bpmnElement="Flow_0dyl1aw">
+        <di:waypoint x="270" y="143" />
+        <di:waypoint x="270" y="230" />
+        <di:waypoint x="360" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12z1ewv_di" bpmnElement="Flow_12z1ewv">
+        <di:waypoint x="575" y="118" />
+        <di:waypoint x="642" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q4sjzb_di" bpmnElement="Flow_0q4sjzb">
+        <di:waypoint x="460" y="118" />
+        <di:waypoint x="525" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1p3kegd_di" bpmnElement="Flow_1p3kegd">
+        <di:waypoint x="295" y="118" />
+        <di:waypoint x="360" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mqf3r3_di" bpmnElement="Flow_1mqf3r3">
+        <di:waypoint x="186" y="118" />
+        <di:waypoint x="245" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="150" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0x6qjt5_di" bpmnElement="FiscalizarContratoTask">
+        <dc:Bounds x="360" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0atbnw6_di" bpmnElement="Event_0atbnw6">
+        <dc:Bounds x="642" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xpq3cp_di" bpmnElement="ReceberProdutosEServicosTask">
+        <dc:Bounds x="360" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_16ucqx1_di" bpmnElement="Gateway_19vlzzr">
+        <dc:Bounds x="245" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1iqwnys_di" bpmnElement="Gateway_0j17kqw">
+        <dc:Bounds x="525" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

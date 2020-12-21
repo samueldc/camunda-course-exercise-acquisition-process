@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="AtribuirTarefasMedicaoDRD" name="Atribuir tarefas de medição" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <decision id="AtribuirTarefasMedicaoDecision" name="Atribuir tarefas de medição">
+    <decisionTable id="DecisionTable_067vqrc" hitPolicy="COLLECT">
+      <input id="Input_1" label="Tipo de pedido" camunda:inputVariable="tipoPedido">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>tipoPedido</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Tipo pessoa" name="tipoPessoa" typeRef="string" />
+      <rule id="DecisionRule_0idzieu">
+        <inputEntry id="UnaryTests_1n9mh3e">
+          <text>"obras-acessibilidade"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0z7l3m4">
+          <text>"brigada-incendio"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1vi00fk">
+        <inputEntry id="UnaryTests_0tp5j06">
+          <text>"obras"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1rmsxn0">
+          <text>"fiscalizacao-obras"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1sy291o">
+        <inputEntry id="UnaryTests_1nl8i0x">
+          <text>"obras-acessibilidade", "obras"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_156bknh">
+          <text>"engenharia"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="AtribuirTarefasMedicaoDecision">
+        <dc:Bounds height="80" width="180" x="160" y="80" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

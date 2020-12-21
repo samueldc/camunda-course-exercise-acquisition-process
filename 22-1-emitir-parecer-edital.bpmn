@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_14nkyb6" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="EmitirParecerDoEditalProcess" name="Emitir parecer do edital" isExecutable="true" camunda:isStartableInTasklist="false">
+    <bpmn:adHocSubProcess id="EmitirParecerDoEditalAdHocSubProcess" name="Emitir parecer do edital">
+      <bpmn:incoming>Flow_09b7dt7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1y1eaft</bpmn:outgoing>
+      <bpmn:userTask id="EmitirParecerDaPGMTask" name="Emitir parecer da PGM" />
+      <bpmn:userTask id="AnaliarOrcamentosTask" name="Analiar orçamentos" />
+      <bpmn:userTask id="SolicitarOrcamentosTask" name="Solicitar orçamentos" />
+      <bpmn:userTask id="VerificarSeHaLicitacoesConhecidasTask" name="Verificar se há licitações conhecidas" />
+      <bpmn:userTask id="ColherPareceresDeOutrasSecretariasTask" name="Colher pareceres de outras secretarias" />
+      <bpmn:userTask id="RealizarNovosOrcamentosTask" name="Realizar novos orçamentos" />
+      <bpmn:userTask id="VerificarRiscosDaExecucaoDaLicitacaoTask" name="Verificar riscos da execução da licitação" />
+    </bpmn:adHocSubProcess>
+    <bpmn:startEvent id="Event_16rog1i">
+      <bpmn:outgoing>Flow_09b7dt7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_09b7dt7" sourceRef="Event_16rog1i" targetRef="EmitirParecerDoEditalAdHocSubProcess" />
+    <bpmn:endEvent id="Event_1qme7x0">
+      <bpmn:incoming>Flow_1y1eaft</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1y1eaft" sourceRef="EmitirParecerDoEditalAdHocSubProcess" targetRef="Event_1qme7x0" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="EmitirParecerDoEditalProcess">
+      <bpmndi:BPMNEdge id="Flow_09b7dt7_di" bpmnElement="Flow_09b7dt7">
+        <di:waypoint x="188" y="295" />
+        <di:waypoint x="230" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1y1eaft_di" bpmnElement="Flow_1y1eaft">
+        <di:waypoint x="740" y="295" />
+        <di:waypoint x="782" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_16rog1i_di" bpmnElement="Event_16rog1i">
+        <dc:Bounds x="152" y="277" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qme7x0_di" bpmnElement="Event_1qme7x0">
+        <dc:Bounds x="782" y="277" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08e6teh_di" bpmnElement="EmitirParecerDoEditalAdHocSubProcess" isExpanded="true">
+        <dc:Bounds x="230" y="80" width="510" height="430" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_12jizff_di" bpmnElement="EmitirParecerDaPGMTask">
+        <dc:Bounds x="300" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0w6x73o_di" bpmnElement="AnaliarOrcamentosTask">
+        <dc:Bounds x="300" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xo2ssx_di" bpmnElement="SolicitarOrcamentosTask">
+        <dc:Bounds x="300" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ak0ekh_di" bpmnElement="VerificarSeHaLicitacoesConhecidasTask">
+        <dc:Bounds x="430" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1tnurat_di" bpmnElement="ColherPareceresDeOutrasSecretariasTask">
+        <dc:Bounds x="430" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ea8pdu_di" bpmnElement="RealizarNovosOrcamentosTask">
+        <dc:Bounds x="430" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h44j4j_di" bpmnElement="VerificarRiscosDaExecucaoDaLicitacaoTask">
+        <dc:Bounds x="560" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
